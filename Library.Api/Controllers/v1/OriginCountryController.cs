@@ -28,7 +28,7 @@ namespace Library.Api.Controllers.v1
         [HttpGet]
         public IActionResult GetAllCountries()
         {
-            var countries = _originCountryManager.GetAllCountries();
+            var countries = _originCountryManager.GetCountriesWithProviders();
             var response = _mapper.Map<IEnumerable<OriginCountryResponse>>(countries);
 
             return Ok(response);
@@ -38,7 +38,7 @@ namespace Library.Api.Controllers.v1
         [HttpGet("{id}")]
         public IActionResult GetCountryById([FromRoute]int id)
         {
-            var country = _originCountryManager.GetCountryById(id);
+            var country = _originCountryManager.GetCountryWithProviders(id);
             if (country == null)
             {
                 return NotFound();
@@ -50,7 +50,7 @@ namespace Library.Api.Controllers.v1
         
         //Post
         [HttpPost]
-        public IActionResult CreateProvider([FromBody]OriginCountryRequest request)
+        public IActionResult CreateCountry([FromBody]OriginCountryRequest request)
         {
             var country = _mapper.Map<OriginCountryRequest, OriginCountry>(request);
             

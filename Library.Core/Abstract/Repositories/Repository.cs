@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Library.Core.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace Library.Core.Abstract.Repositories
@@ -10,11 +11,14 @@ namespace Library.Core.Abstract.Repositories
     public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         protected readonly DbContext Context;
+        protected ApplicationDbContext ApplicationDbContext => Context as ApplicationDbContext;
 
         public Repository(DbContext context)
         {
             Context = context;
         }
+
+        
 
         public TEntity Get(int id)
         {

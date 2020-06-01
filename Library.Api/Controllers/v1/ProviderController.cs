@@ -28,7 +28,7 @@ namespace Library.Api.Controllers.v1
         [HttpGet]
         public IActionResult GetAllProviders()
         {
-            var providers = _providerManager.GetAllProviders();
+            var providers = _providerManager.GetAllProvidersWithCoffees();
             var response = _mapper.Map<IEnumerable<ProviderResponse>>(providers);
 
             return Ok(response);
@@ -38,7 +38,7 @@ namespace Library.Api.Controllers.v1
         [HttpGet("{id}")]
         public IActionResult GetProviderById([FromRoute]int id)
         {
-            var provider = _providerManager.GetProviderById(id);
+            var provider = _providerManager.GetProviderWithCoffees(id);
             if (provider == null)
             {
                 return NotFound();

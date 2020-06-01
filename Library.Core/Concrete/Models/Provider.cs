@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Library.Core.Concrete.Models
 {
@@ -13,6 +14,7 @@ namespace Library.Core.Concrete.Models
         
         public OriginCountry OriginCountry{ get; set; }
         public ICollection<Coffee> Coffees { get; set; }
+
         
     }
 }

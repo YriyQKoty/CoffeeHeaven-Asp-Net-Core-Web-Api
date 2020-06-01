@@ -28,6 +28,17 @@ namespace Library.Core.Concrete.Managers
             return _originCountryRepository.SingleOrDefault(country => country.Id == id);
         }
 
+        public IEnumerable<OriginCountry> GetCountriesWithProviders()
+        {
+            return _originCountryRepository.GetCountriesWithProviders();
+        }
+
+
+        public OriginCountry GetCountryWithProviders(int id)
+        {
+            return _originCountryRepository.GetCountryWithProviders(id);
+        }
+
         public OriginCountry RemoveCountry(int id)
         {
             return _originCountryRepository.SingleOrDefault(country => country.Id == id);

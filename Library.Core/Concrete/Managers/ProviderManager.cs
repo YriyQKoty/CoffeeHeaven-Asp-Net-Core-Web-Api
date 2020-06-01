@@ -18,11 +18,22 @@ namespace Library.Core.Concrete.Managers
         {
             return _providerRepository.GetAll();
         }
+        
+        public IEnumerable<Provider> GetAllProvidersWithCoffees()
+        {
+            return _providerRepository.GetProvidersWithCoffees();
+        }
+        
+
         public Provider GetProviderById(int id)
         {
             return _providerRepository.Get(id);
         }
         
+        public Provider GetProviderWithCoffees(int id)
+        {
+            return _providerRepository.GetProviderWithCoffees(id);
+        }
         public Provider FindProvider(int id)
         {
             return _providerRepository.SingleOrDefault(provider => provider.Id == id);

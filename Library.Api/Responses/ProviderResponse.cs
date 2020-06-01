@@ -1,4 +1,5 @@
-﻿using Library.Core.Concrete.Models;
+﻿using System.Collections.Generic;
+using Library.Core.Concrete.Models;
 
 namespace Library.Api.Responses
 {
@@ -10,5 +11,7 @@ namespace Library.Api.Responses
         public string Name { get; set; }
 
         public int OriginCountryId { get; set; }
+        
+        public ICollection<int> Coffees { get; set; }
     }
 }

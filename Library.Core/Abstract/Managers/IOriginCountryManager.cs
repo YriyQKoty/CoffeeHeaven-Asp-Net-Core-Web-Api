@@ -10,6 +10,10 @@ namespace Library.Core.Abstract.Managers
         OriginCountry GetCountryById(int id);
        
         OriginCountry  FindCountry (int id);
+
+        IEnumerable<OriginCountry> GetCountriesWithProviders();
+        
+        OriginCountry GetCountryWithProviders(int id);
        
         OriginCountry  RemoveCountry (int id);
     }
