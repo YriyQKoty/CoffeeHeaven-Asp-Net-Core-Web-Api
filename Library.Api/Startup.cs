@@ -1,3 +1,6 @@
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 using AutoMapper;
 using FluentValidation.AspNetCore;
 using Library.Api.Validators;
@@ -5,15 +8,21 @@ using Library.Core;
 using Library.Core.Abstract.Managers;
 using Library.Core.Abstract.Repositories;
 using Library.Core.Concrete.Managers;
+using Library.Core.Concrete.Models;
 using Library.Core.Concrete.Repositories;
 using Library.Core.Persistence;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Library.Api
 {
@@ -60,10 +69,36 @@ namespace Library.Api
             {
                 o.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
                 o.RegisterValidatorsFromAssemblyContaining<CoffeeRequestValidator>();
-                o.RegisterValidatorsFromAssemblyContaining<ProviderRequestValidator>();
-                o.RegisterValidatorsFromAssemblyContaining<OriginCountryRequestValidator>();
             });
+
+            services.AddIdentity<User, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
             
+            
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+            services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(conf =>
+                {
+                    conf.RequireHttpsMetadata = false;
+                    conf.SaveToken = true;
+                    conf.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidIssuer = Configuration["Jwt:JwtIssuer"],
+                        ValidAudience = Configuration["Jwt:JwtIssuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:JwtKey"])),
+                        ClockSkew = TimeSpan.Zero // remove delay of token when expire
+                    };
+                });
+
+
         }
 
      
@@ -75,6 +110,10 @@ namespace Library.Api
             }
 
             app.UseRouting();
+            
+            app.UseAuthentication();
+
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }

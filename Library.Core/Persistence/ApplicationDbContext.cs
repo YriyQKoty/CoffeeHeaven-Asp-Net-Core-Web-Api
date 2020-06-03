@@ -1,14 +1,18 @@
-﻿using Library.Core.Concrete.Models;
+﻿using System;
+using Library.Core.Concrete.Models;
 using Library.Core.Persistence.EntityConfigurations;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Library.Core.Persistence
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<User>
     {
         public DbSet<Coffee> Coffees { get; set; }
         public DbSet<Provider> Providers { get; set; }
         public DbSet<OriginCountry> Countries { get; set; }
+        
+        
         
         public ApplicationDbContext (DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -17,11 +21,10 @@ namespace Library.Core.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new CoffeeConfiguration());
+            
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(CoffeeConfiguration).Assembly);
 
-            modelBuilder.ApplyConfiguration(new ProviderConfiguration());
-
-            modelBuilder.ApplyConfiguration(new OriginCountryConfiguration());
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

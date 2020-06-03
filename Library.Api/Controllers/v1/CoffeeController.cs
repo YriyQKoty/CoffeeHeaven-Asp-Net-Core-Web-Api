@@ -5,10 +5,12 @@ using Library.Api.Responses;
 using Library.Core.Abstract.Managers;
 using Library.Core.Abstract.Repositories;
 using Library.Core.Concrete.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Api.Controllers.v1
 {
+    [Authorize]
     [ApiController]
     [Route("/api/v1/[controller]")]
     public class CoffeeController : Controller
@@ -16,15 +18,14 @@ namespace Library.Api.Controllers.v1
         private readonly ICoffeeManager _coffeeManager;
         private readonly IMapper _mapper;
         
-        private readonly ICoffeeRepository _coffeeRepository;
         
-        public CoffeeController(ICoffeeManager coffeeManager, IMapper mapper, ICoffeeRepository coffeeRepository)
+        public CoffeeController(ICoffeeManager coffeeManager, IMapper mapper)
         {
             _coffeeManager = coffeeManager;
             _mapper = mapper;
-            _coffeeRepository = coffeeRepository;
         }
         // GET all
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult GetAllCoffees()
         {
@@ -34,14 +35,14 @@ namespace Library.Api.Controllers.v1
            return Ok(response);
         }
         
-        //Get one
-        [HttpGet("{id}")]
+        [AllowAnonymous]
+        [HttpGet("{id:min(1)}")]
         public IActionResult GetCoffee([FromRoute]int id)
         {
             var coffee = _coffeeManager.GetCoffee(id);
             if (coffee == null)
             {
-                return NotFound();
+                return NotFound("There is no object with such ID in a DataBase. Try another one.");
             }
             var response = _mapper.Map<CoffeeResponse>(coffee);
 
@@ -54,8 +55,13 @@ namespace Library.Api.Controllers.v1
         {
             var coffee = _mapper.Map<CoffeeRequest, Coffee>(request);
             
-             _coffeeRepository.Add(coffee);
-             _coffeeRepository.SaveChanges();
+            if (!_coffeeManager.DoesProviderIdExist(coffee))
+            {
+                return BadRequest("There is no such provider ID in a Database!");
+            }
+
+            _coffeeManager.Add(coffee);
+             _coffeeManager.SaveChanges();
 
              var response = _mapper.Map<CoffeeResponse>(coffee);
 
@@ -63,32 +69,34 @@ namespace Library.Api.Controllers.v1
 
         }
         
-        [HttpPut("{id}")]
+        [HttpPut("{id:min(1)}")]
         public IActionResult ChangeCoffee([FromRoute]int id, [FromBody] CoffeeRequest request)
         {
             var coffee = _coffeeManager.ChangeCoffee(id);
+            
             if (coffee == null)
             {
-                return NotFound();
+                return NotFound("There is no object with such ID in a DataBase. Try another one.");
             }
+            
             var response = _mapper.Map(request, coffee);
             
-            _coffeeRepository.SaveChanges();
+            _coffeeManager.SaveChanges();
             return Created("", response);
             
         }
         
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:min(1)}")]
         public IActionResult RemoveCoffee([FromRoute]int id)
         {
             var coffee = _coffeeManager.ChangeCoffee(id);
             if (coffee == null)
             {
-                return NotFound();
+                return NotFound("There is no object with such ID in a DataBase. Try another one.");
             }
             
-            _coffeeRepository.Remove(coffee);
-            _coffeeRepository.SaveChanges();
+            _coffeeManager.Remove(coffee);
+            _coffeeManager.SaveChanges();
             return Ok();
         }
         

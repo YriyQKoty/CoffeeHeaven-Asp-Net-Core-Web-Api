@@ -10,17 +10,24 @@ namespace Library.Api.Mapper
     {
         public MapperConfig()
         {
-            CreateMap<CoffeeRequest, Coffee>().ForMember(c => c.Id, opt => opt.Ignore());
+            CreateMap<CoffeeRequest, Coffee>()
+                .ForMember(c => c.Id, opt => opt.Ignore());
             CreateMap<Coffee, CoffeeResponse>();
             
-            CreateMap<ProviderRequest,Provider>().ForMember(p => p.Id, opt => opt.Ignore());
-            CreateMap<Provider, ProviderResponse>().ForMember(p => p.Coffees, 
-                opt => opt.MapFrom(p => p.Coffees.Select(c => c.Id)));
+            CreateMap<ProviderRequest,Provider>()
+                .ForMember(p => p.Id, opt => opt.Ignore());
+            CreateMap<Provider, ProviderResponse>()
+                .ForMember(p => p.Coffees, opt 
+                    => opt.MapFrom(p => p.Coffees.Select(c => c.Id)));
             
-            CreateMap<OriginCountryRequest,OriginCountry>().ForMember(oc => oc.Id, opt => opt.Ignore());
-            CreateMap<OriginCountry, OriginCountryResponse>().ForMember(ocr => ocr.Providers, 
-                opt => 
-                    opt.MapFrom(oc => oc.Providers.Select(p => p.Id)));
+            CreateMap<OriginCountryRequest,OriginCountry>()
+                .ForMember(oc => oc.Id, opt => opt.Ignore());
+            CreateMap<OriginCountry, OriginCountryResponse>()
+                .ForMember(ocr => ocr.Providers, 
+                opt 
+                    => opt.MapFrom(oc => oc.Providers.Select(p => p.Id)));
+
+            CreateMap<RegisterRequest, User>();
         }
     }
 }

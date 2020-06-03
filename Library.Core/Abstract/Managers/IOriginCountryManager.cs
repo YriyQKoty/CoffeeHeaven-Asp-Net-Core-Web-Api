@@ -16,5 +16,11 @@ namespace Library.Core.Abstract.Managers
         OriginCountry GetCountryWithProviders(int id);
        
         OriginCountry  RemoveCountry (int id);
+        
+        void Add(OriginCountry originCountry);
+
+        void Remove(OriginCountry originCountry);
+        
+       
     }
 }

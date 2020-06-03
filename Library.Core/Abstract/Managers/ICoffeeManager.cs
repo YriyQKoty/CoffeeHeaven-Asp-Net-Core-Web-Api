@@ -13,5 +13,11 @@ namespace Library.Core.Abstract.Managers
        Coffee ChangeCoffee (int id);
        
        Coffee RemoveCoffee (int id);
+       
+       void Add(Coffee coffee);
+
+       void Remove(Coffee coffee);
+
+       bool DoesProviderIdExist(Coffee coffee);
     }
 }

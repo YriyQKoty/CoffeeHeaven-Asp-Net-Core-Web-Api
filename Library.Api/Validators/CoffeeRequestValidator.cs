@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Library.Api.Requests;
+using Library.Core.Concrete.Models;
 
 namespace Library.Api.Validators
 {
@@ -7,7 +8,7 @@ namespace Library.Api.Validators
     {
         public CoffeeRequestValidator()
         {
-            RuleFor(c => c.Id).GreaterThan(0).WithMessage("Coffee ID cannot be negative");
+            RuleFor(c => c.Id).GreaterThan(-1).WithMessage("Coffee ID cannot be negative");
             
             RuleFor(c => c.Name).MinimumLength(3).WithMessage("Name is too short");
             RuleFor(c => c.Name).MaximumLength(64).WithMessage("Name is too long");
@@ -20,8 +21,11 @@ namespace Library.Api.Validators
             RuleFor(c => c.Description).MaximumLength(255)
                 .WithMessage("Description should be not greater than 255 characters");
 
-            RuleFor(c => c.ProviderId).GreaterThan(0).WithMessage("Provider ID cannot be negative");
+            RuleFor(c => c.ProviderId).GreaterThan(-1).WithMessage("Provider ID cannot be negative");
 
+            RuleFor(c => c.Type).IsInEnum().WithMessage("There is no such type of coffee.");
+            
+            RuleFor(c => c.Quality).IsInEnum().WithMessage("There is no such quality of coffee.");
         }
     }
 }

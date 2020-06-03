@@ -48,5 +48,15 @@ namespace Library.Core.Concrete.Managers
         {
             return _originCountryRepository.SaveChanges(); 
         }
+
+        public void Add(OriginCountry originCountry)
+        {
+            _originCountryRepository.Add(originCountry);
+        }
+
+        public void Remove(OriginCountry originCountry)
+        {
+           _originCountryRepository.Remove(originCountry);
+        }
     }
 }

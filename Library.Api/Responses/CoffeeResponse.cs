@@ -3,7 +3,6 @@ using Library.Core.Concrete.Models;
 
 namespace Library.Api.Responses
 {
-    [DataContract]
     public class CoffeeResponse
     {
 

@@ -8,10 +8,11 @@ namespace Library.Core.Concrete.Managers
     public class ProviderManager : IProviderManager
     {
         private readonly IProviderRepository _providerRepository;
-
-        public ProviderManager(IProviderRepository providerRepository)
+        private readonly IOriginCountryRepository _originCountryRepository;
+        public ProviderManager(IProviderRepository providerRepository, IOriginCountryRepository originCountryRepository)
         {
             _providerRepository = providerRepository;
+            _originCountryRepository = originCountryRepository;
         }
 
         public IEnumerable<Provider> GetAllProviders()
@@ -47,6 +48,21 @@ namespace Library.Core.Concrete.Managers
         public int SaveChanges()
         {
             return _providerRepository.SaveChanges(); 
+        }
+        
+        public void Add(Provider provider)
+        {
+            _providerRepository.Add(provider);
+        }
+
+        public void Remove(Provider provider)
+        {
+            _providerRepository.Remove(provider);
+        }
+        
+        public bool DoesCountryIdExist(Provider provider)
+        {
+            return  _originCountryRepository?.SingleOrDefault(oc => oc.Id == provider.OriginCountryId) != null;
         }
         
     }

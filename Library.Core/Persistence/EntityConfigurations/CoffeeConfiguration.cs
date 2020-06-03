@@ -19,6 +19,8 @@ namespace Library.Core.Persistence.EntityConfigurations
                 .Property(b => b.Id)
                 .ValueGeneratedOnAdd()
                 .IsRequired();
+            
+                
         }
     }
 }

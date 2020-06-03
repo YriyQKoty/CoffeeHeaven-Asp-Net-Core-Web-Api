@@ -16,13 +16,12 @@ namespace Library.Api.Controllers.v1
         private readonly IProviderManager _providerManager;
         private readonly IMapper _mapper;
         
-        private readonly IProviderRepository _providerRepository;
         
-        public ProviderController(IProviderManager providerManager, IMapper mapper, IProviderRepository providerRepository)
+        public ProviderController(IProviderManager providerManager, IMapper mapper)
         {
             _providerManager = providerManager;
             _mapper = mapper;
-            _providerRepository = providerRepository;
+      
         }
         // GET
         [HttpGet]
@@ -35,13 +34,13 @@ namespace Library.Api.Controllers.v1
         }
         
         //Get one
-        [HttpGet("{id}")]
+        [HttpGet("{id:min(1)}")]
         public IActionResult GetProviderById([FromRoute]int id)
         {
             var provider = _providerManager.GetProviderWithCoffees(id);
             if (provider == null)
             {
-                return NotFound();
+                return NotFound("There is no object with such ID in a DataBase. Try another one.");
             }
             var response = _mapper.Map<ProviderResponse>(provider);
 
@@ -54,8 +53,13 @@ namespace Library.Api.Controllers.v1
         {
             var provider = _mapper.Map<ProviderRequest, Provider>(request);
             
-           _providerRepository.Add(provider);
-           _providerRepository.SaveChanges();
+            if (!_providerManager.DoesCountryIdExist(provider))
+            {
+                return BadRequest("There is no such provider ID in a Database!");
+            } 
+            
+            _providerManager.Add(provider);
+            _providerManager.SaveChanges();
 
             var response = _mapper.Map<ProviderResponse>(provider);
 
@@ -63,32 +67,32 @@ namespace Library.Api.Controllers.v1
 
         }
         
-        [HttpPut("{id}")]
+        [HttpPut("{id:min(1)}")]
         public IActionResult UpdateProvider([FromRoute]int id, [FromBody] ProviderRequest request)
         {
             var provider = _providerManager.FindProvider(id);
             if (provider == null)
             {
-                return NotFound();
+                return NotFound("There is no object with such ID in a DataBase. Try another one.");
             }
             var response = _mapper.Map(request, provider);
             
-            _providerRepository.SaveChanges();
+            _providerManager.SaveChanges();
             return Created("", response);
             
         }
         
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:min(1)}")]
         public IActionResult RemoveProvider([FromRoute]int id)
         {
             var provider = _providerManager.FindProvider(id);
             if (provider == null)
             {
-                return NotFound();
+                return NotFound("There is no object with such ID in a DataBase. Try another one.");
             }
             
-            _providerRepository.Remove(provider);
-            _providerRepository.SaveChanges();
+            _providerManager.Remove(provider);
+            _providerManager.SaveChanges();
             return Ok();
         }
 

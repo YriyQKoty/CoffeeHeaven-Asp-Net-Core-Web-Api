@@ -16,13 +16,12 @@ namespace Library.Api.Controllers.v1
          private readonly IOriginCountryManager _originCountryManager;
         private readonly IMapper _mapper;
         
-        private readonly IOriginCountryRepository _originCountryRepository;
         
-        public OriginCountryController( IOriginCountryManager originCountryManager, IMapper mapper, IOriginCountryRepository originCountryRepository)
+        public OriginCountryController( IOriginCountryManager originCountryManager, IMapper mapper)
         {
             _originCountryManager = originCountryManager;
             _mapper = mapper;
-            _originCountryRepository = originCountryRepository;
+           
         }
         // GET
         [HttpGet]
@@ -35,13 +34,13 @@ namespace Library.Api.Controllers.v1
         }
         
         //Get one
-        [HttpGet("{id}")]
+        [HttpGet("{id:min(1)}")]
         public IActionResult GetCountryById([FromRoute]int id)
         {
             var country = _originCountryManager.GetCountryWithProviders(id);
             if (country == null)
             {
-                return NotFound();
+                return NotFound("There is no object with such ID in a DataBase. Try another one.");
             }
             var response = _mapper.Map<OriginCountryResponse>(country);
 
@@ -54,8 +53,8 @@ namespace Library.Api.Controllers.v1
         {
             var country = _mapper.Map<OriginCountryRequest, OriginCountry>(request);
             
-           _originCountryRepository.Add(country);
-           _originCountryRepository.SaveChanges();
+           _originCountryManager.Add(country);
+           _originCountryManager.SaveChanges();
 
             var response = _mapper.Map<OriginCountryResponse>(country);
 
@@ -63,32 +62,32 @@ namespace Library.Api.Controllers.v1
 
         }
         
-        [HttpPut("{id}")]
+        [HttpPut("{id:min(1)}")]
         public IActionResult UpdateCountry([FromRoute]int id, [FromBody] OriginCountryRequest request)
         {
             var country = _originCountryManager.FindCountry(id);
             if (country == null)
             {
-                return NotFound();
+                return NotFound("There is no object with such ID in a DataBase. Try another one.");
             }
             var response = _mapper.Map(request, country);
             
-            _originCountryRepository.SaveChanges();
+            _originCountryManager.SaveChanges();
             return Created("", response);
             
         }
         
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:min(1)}")]
         public IActionResult RemoveCountry([FromRoute]int id)
         {
             var country = _originCountryManager.FindCountry(id);
             if (country == null)
             {
-                return NotFound();
+                return NotFound("There is no object with such ID in a DataBase. Try another one.");
             }
             
-            _originCountryRepository.Remove(country);
-            _originCountryRepository.SaveChanges();
+            _originCountryManager.Remove(country);
+            _originCountryManager.SaveChanges();
             return Ok();
         }
     }
