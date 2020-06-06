@@ -77,7 +77,13 @@ namespace Library.Api
             
             
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-
+            
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequireAdministratorRole",
+                    policy => policy.RequireRole("Administrator"));
+            });
+            
             services
                 .AddAuthentication(options =>
                 {

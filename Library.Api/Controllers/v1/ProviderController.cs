@@ -5,6 +5,7 @@ using Library.Api.Responses;
 using Library.Core.Abstract.Managers;
 using Library.Core.Abstract.Repositories;
 using Library.Core.Concrete.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Api.Controllers.v1
@@ -25,6 +26,7 @@ namespace Library.Api.Controllers.v1
         }
         // GET
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult GetAllProviders()
         {
             var providers = _providerManager.GetAllProvidersWithCoffees();
@@ -35,6 +37,7 @@ namespace Library.Api.Controllers.v1
         
         //Get one
         [HttpGet("{id:min(1)}")]
+        [AllowAnonymous]
         public IActionResult GetProviderById([FromRoute]int id)
         {
             var provider = _providerManager.GetProviderWithCoffees(id);
@@ -49,6 +52,7 @@ namespace Library.Api.Controllers.v1
         
         //Post
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         public IActionResult CreateProvider([FromBody]ProviderRequest request)
         {
             var provider = _mapper.Map<ProviderRequest, Provider>(request);
@@ -68,6 +72,7 @@ namespace Library.Api.Controllers.v1
         }
         
         [HttpPut("{id:min(1)}")]
+        [Authorize(Roles = "Administrator, Provider")]
         public IActionResult UpdateProvider([FromRoute]int id, [FromBody] ProviderRequest request)
         {
             var provider = _providerManager.FindProvider(id);
@@ -83,6 +88,7 @@ namespace Library.Api.Controllers.v1
         }
         
         [HttpDelete("{id:min(1)}")]
+        [Authorize(Roles = "Administrator. Provider")]
         public IActionResult RemoveProvider([FromRoute]int id)
         {
             var provider = _providerManager.FindProvider(id);

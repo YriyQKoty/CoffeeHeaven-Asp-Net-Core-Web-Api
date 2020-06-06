@@ -5,6 +5,7 @@ using Library.Api.Responses;
 using Library.Core.Abstract.Managers;
 using Library.Core.Abstract.Repositories;
 using Library.Core.Concrete.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Api.Controllers.v1
@@ -25,6 +26,7 @@ namespace Library.Api.Controllers.v1
         }
         // GET
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult GetAllCountries()
         {
             var countries = _originCountryManager.GetCountriesWithProviders();
@@ -35,6 +37,7 @@ namespace Library.Api.Controllers.v1
         
         //Get one
         [HttpGet("{id:min(1)}")]
+        [AllowAnonymous]
         public IActionResult GetCountryById([FromRoute]int id)
         {
             var country = _originCountryManager.GetCountryWithProviders(id);
@@ -49,6 +52,7 @@ namespace Library.Api.Controllers.v1
         
         //Post
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         public IActionResult CreateCountry([FromBody]OriginCountryRequest request)
         {
             var country = _mapper.Map<OriginCountryRequest, OriginCountry>(request);
@@ -63,6 +67,7 @@ namespace Library.Api.Controllers.v1
         }
         
         [HttpPut("{id:min(1)}")]
+        [Authorize(Roles = "Administrator")]
         public IActionResult UpdateCountry([FromRoute]int id, [FromBody] OriginCountryRequest request)
         {
             var country = _originCountryManager.FindCountry(id);
@@ -78,6 +83,7 @@ namespace Library.Api.Controllers.v1
         }
         
         [HttpDelete("{id:min(1)}")]
+        [Authorize(Roles = "Administrator")]
         public IActionResult RemoveCountry([FromRoute]int id)
         {
             var country = _originCountryManager.FindCountry(id);

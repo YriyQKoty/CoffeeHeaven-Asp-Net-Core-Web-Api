@@ -1,4 +1,6 @@
-﻿namespace Library.Api.Requests
+﻿using System.Collections.Generic;
+
+namespace Library.Api.Requests
 {
     public class RegisterRequest
     {
@@ -9,6 +11,7 @@
         public string PhoneNumber { get; set; }
 
         public string Password { get; set; }
+        
 
         public string PasswordConfirm { get; set; }
         

@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Security.Claims;
 using AutoMapper;
 using Library.Api.Requests;
 using Library.Api.Responses;
