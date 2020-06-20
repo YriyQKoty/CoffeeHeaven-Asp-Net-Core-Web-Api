@@ -51,7 +51,7 @@ namespace Library.Api.Controllers.v1
         
         //Post
         [HttpPost]
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Admin,Provider")]
         public IActionResult CreateCoffee([FromBody]CoffeeRequest request)
         {
             var coffee = _mapper.Map<CoffeeRequest, Coffee>(request);
@@ -71,7 +71,7 @@ namespace Library.Api.Controllers.v1
         }
         
         [HttpPut("{id:min(1)}")]
-        [Authorize(Roles = "Administrator,Provider")]
+        [Authorize(Roles = "Admin,Provider")]
         public IActionResult ChangeCoffee([FromRoute]int id, [FromBody] CoffeeRequest request)
         {
             var coffee = _coffeeManager.ChangeCoffee(id);
@@ -89,7 +89,7 @@ namespace Library.Api.Controllers.v1
         }
         
         [HttpDelete("{id:min(1)}")]
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Admin")]
         public IActionResult RemoveCoffee([FromRoute]int id)
         {
             var coffee = _coffeeManager.ChangeCoffee(id);

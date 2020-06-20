@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using AutoMapper;
@@ -18,11 +19,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design.Internal;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace Library.Api
 {
@@ -78,11 +81,7 @@ namespace Library.Api
             
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("RequireAdministratorRole",
-                    policy => policy.RequireRole("Administrator"));
-            });
+            services.AddAuthorization();
             
             services
                 .AddAuthentication(options =>
@@ -104,12 +103,43 @@ namespace Library.Api
                     };
                 });
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo()
+                {
+                    Version = "v1",
+                    Title = "WebApi",
+                    Description = "Coffee Heaven Web Api",
+                });
+                
+                c.AddSecurityDefinition("Bearer", 
+                    new OpenApiSecurityScheme{
+                        Description = "JWT Authorization header using the Bearer scheme.",
+                        Type = SecuritySchemeType.Http, 
+                        Scheme = "bearer" 
+                    });
+            
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement{ 
+                    {
+                        new OpenApiSecurityScheme{
+                            Reference = new OpenApiReference{
+                                Id = "Bearer", 
+                                Type = ReferenceType.SecurityScheme
+                            }
+                        },new List<string>()
+                    }
+                });
+                
+            });
+
 
         }
 
      
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+           
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -120,6 +150,14 @@ namespace Library.Api
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+            app.UseSwagger();
+            
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
+                c.RoutePrefix = String.Empty;
+            });
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }

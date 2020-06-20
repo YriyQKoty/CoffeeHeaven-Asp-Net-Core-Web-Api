@@ -84,11 +84,9 @@ namespace Library.Api.Controllers.v1
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
                
             };
-            foreach (var role in userRoles)
-            {
-                claims.Append(new Claim(ClaimTypes.Role, role));
-            }
-           
+            
+            claims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));
+
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:JwtKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

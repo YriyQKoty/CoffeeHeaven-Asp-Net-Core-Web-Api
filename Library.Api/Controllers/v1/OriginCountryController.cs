@@ -6,18 +6,20 @@ using Library.Core.Abstract.Managers;
 using Library.Core.Abstract.Repositories;
 using Library.Core.Concrete.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Api.Controllers.v1
 {
     [ApiController]
+    [Authorize( Roles = "Admin")]
     [Route("/api/v1/[controller]")]
     public class OriginCountryController : Controller
     {
          private readonly IOriginCountryManager _originCountryManager;
         private readonly IMapper _mapper;
         
-        
+       
         public OriginCountryController( IOriginCountryManager originCountryManager, IMapper mapper)
         {
             _originCountryManager = originCountryManager;
@@ -52,7 +54,7 @@ namespace Library.Api.Controllers.v1
         
         //Post
         [HttpPost]
-        [Authorize(Roles = "Administrator")]
+        
         public IActionResult CreateCountry([FromBody]OriginCountryRequest request)
         {
             var country = _mapper.Map<OriginCountryRequest, OriginCountry>(request);
@@ -67,7 +69,7 @@ namespace Library.Api.Controllers.v1
         }
         
         [HttpPut("{id:min(1)}")]
-        [Authorize(Roles = "Administrator")]
+       
         public IActionResult UpdateCountry([FromRoute]int id, [FromBody] OriginCountryRequest request)
         {
             var country = _originCountryManager.FindCountry(id);
@@ -83,7 +85,7 @@ namespace Library.Api.Controllers.v1
         }
         
         [HttpDelete("{id:min(1)}")]
-        [Authorize(Roles = "Administrator")]
+       
         public IActionResult RemoveCountry([FromRoute]int id)
         {
             var country = _originCountryManager.FindCountry(id);

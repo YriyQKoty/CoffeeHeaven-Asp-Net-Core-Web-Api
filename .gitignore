@@ -129,3 +129,5 @@ Library.Core/obj/Debug/netcoreapp3.1/Library.Core.pdb
 *.dll
 *.pdb
 Library.Core/obj/Debug/netcoreapp3.1/Library.Core.pdb
+Library.Core/Migrations/20200603184749_AddUsers.cs
+Library.Core/obj/Debug/netcoreapp3.1/Library.Core.pdb

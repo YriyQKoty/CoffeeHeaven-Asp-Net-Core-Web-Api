@@ -52,7 +52,7 @@ namespace Library.Api.Controllers.v1
         
         //Post
         [HttpPost]
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Admin")]
         public IActionResult CreateProvider([FromBody]ProviderRequest request)
         {
             var provider = _mapper.Map<ProviderRequest, Provider>(request);
@@ -72,7 +72,7 @@ namespace Library.Api.Controllers.v1
         }
         
         [HttpPut("{id:min(1)}")]
-        [Authorize(Roles = "Administrator, Provider")]
+        [Authorize(Roles = "Admin, Provider")]
         public IActionResult UpdateProvider([FromRoute]int id, [FromBody] ProviderRequest request)
         {
             var provider = _providerManager.FindProvider(id);
@@ -88,7 +88,7 @@ namespace Library.Api.Controllers.v1
         }
         
         [HttpDelete("{id:min(1)}")]
-        [Authorize(Roles = "Administrator. Provider")]
+        [Authorize(Roles = "Admin")]
         public IActionResult RemoveProvider([FromRoute]int id)
         {
             var provider = _providerManager.FindProvider(id);
