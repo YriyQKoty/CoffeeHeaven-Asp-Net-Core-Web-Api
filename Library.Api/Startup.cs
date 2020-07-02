@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using AutoMapper;
 using FluentValidation.AspNetCore;
+using Library.Api.Fakes;
 using Library.Api.Validators;
 using Library.Core;
 using Library.Core.Abstract.Managers;
