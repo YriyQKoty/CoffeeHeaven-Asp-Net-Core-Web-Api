@@ -10,9 +10,7 @@ namespace Library.Core.Abstract.Managers
        
        Coffee GetCoffee(int id);
        
-       Coffee ChangeCoffee (int id);
        
-       Coffee RemoveCoffee (int id);
        
        void Add(Coffee coffee);
 

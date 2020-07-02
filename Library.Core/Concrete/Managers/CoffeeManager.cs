@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using AutoMapper;
 using Library.Core.Abstract.Managers;
 using Library.Core.Abstract.Repositories;
 using Library.Core.Concrete.Models;
-using Library.Core.Concrete.Repositories;
-using Library.Core.Persistence;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace Library.Core.Concrete.Managers
 {
@@ -13,6 +12,7 @@ namespace Library.Core.Concrete.Managers
     {
         private readonly ICoffeeRepository _coffeeRepository;
         private readonly IProviderRepository _providerRepository;
+        
 
         public CoffeeManager(ICoffeeRepository coffeeRepository, IProviderRepository providerRepository)
         {
@@ -29,16 +29,12 @@ namespace Library.Core.Concrete.Managers
         {
             return _coffeeRepository.Get(id);
         }
-
-        public Coffee ChangeCoffee(int id)
+        
+        public void Remove(Coffee coffee)
         {
-            return _coffeeRepository.SingleOrDefault(coffee => coffee.Id == id);
+            _coffeeRepository.Remove(coffee);
         }
-
-        public Coffee RemoveCoffee(int id)
-        {
-            return _coffeeRepository.SingleOrDefault(coffee => coffee.Id == id);
-        }
+        
 
         public int SaveChanges()
         {
@@ -50,15 +46,10 @@ namespace Library.Core.Concrete.Managers
         {
             _coffeeRepository.Add(coffee);
         }
-
-        public void Remove(Coffee coffee)
-        {
-            _coffeeRepository.Remove(coffee);
-        }
-
+        
         public bool DoesProviderIdExist(Coffee coffee)
         {
-            return  _providerRepository?.SingleOrDefault(p => p.Id == coffee.ProviderId) != null;
+            return  _providerRepository.SingleOrDefault(p => p.Id == coffee.ProviderId) != null;
         }
     }
 }
