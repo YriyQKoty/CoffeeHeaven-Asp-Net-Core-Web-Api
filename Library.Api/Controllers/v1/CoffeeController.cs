@@ -37,6 +37,7 @@ namespace Library.Api.Controllers.v1
            return Ok(response);
         }
         
+        // GET one
         [AllowAnonymous]
         [HttpGet("{id:min(1)}")]
         public IActionResult GetCoffee([FromRoute]int id)
@@ -52,7 +53,7 @@ namespace Library.Api.Controllers.v1
             return Ok(response);
         }
         
-        //Post
+        // POST
         [HttpPost]
         [Authorize(Roles = "Admin,Provider")]
         public IActionResult CreateCoffee([FromBody]CoffeeRequest request)
@@ -73,6 +74,7 @@ namespace Library.Api.Controllers.v1
 
         }
         
+        // PUT
         [HttpPut("{id:min(1)}")]
         [Authorize(Roles = "Admin,Provider")]
         public IActionResult ChangeCoffee([FromRoute]int id, [FromBody] CoffeeRequest request)
@@ -94,6 +96,7 @@ namespace Library.Api.Controllers.v1
             
         }
         
+        // DELETE
         [HttpDelete("{id:min(1)}")]
         [Authorize(Roles = "Admin")]
         public IActionResult RemoveCoffee([FromRoute]int id)

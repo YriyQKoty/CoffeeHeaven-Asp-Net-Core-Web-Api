@@ -8,8 +8,7 @@ namespace Library.Api.Validators
     {
         public CoffeeRequestValidator()
         {
-            RuleFor(c => c.Id).GreaterThan(-1).WithMessage("Coffee ID cannot be negative");
-            
+
             RuleFor(c => c.Name).MinimumLength(3).WithMessage("Name is too short");
             RuleFor(c => c.Name).MaximumLength(64).WithMessage("Name is too long");
 
