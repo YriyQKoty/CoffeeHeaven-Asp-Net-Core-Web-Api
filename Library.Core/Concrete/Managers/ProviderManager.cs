@@ -40,9 +40,10 @@ namespace Library.Core.Concrete.Managers
             return _providerRepository.SingleOrDefault(provider => provider.Id == id);
         }
         
-        public Provider RemoveProvider(int id)
+        public void RemoveProvider(int id)
         {
-            return _providerRepository.SingleOrDefault(provider => provider.Id == id);
+            var provider = _providerRepository.SingleOrDefault(provider => provider.Id == id);
+            _providerRepository.Remove(provider);
         }
       
         public int SaveChanges()
@@ -60,9 +61,9 @@ namespace Library.Core.Concrete.Managers
             _providerRepository.Remove(provider);
         }
         
-        public bool DoesCountryIdExist(Provider provider)
+        public bool DoesCountryIdExist(int countryId)
         {
-            return  _originCountryRepository?.SingleOrDefault(oc => oc.Id == provider.OriginCountryId) != null;
+            return  _originCountryRepository?.SingleOrDefault(oc => oc.Id == countryId) != null;
         }
         
     }

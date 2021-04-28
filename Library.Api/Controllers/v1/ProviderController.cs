@@ -55,12 +55,12 @@ namespace Library.Api.Controllers.v1
         [Authorize(Roles = "Admin")]
         public IActionResult CreateProvider([FromBody]ProviderRequest request)
         {
-            var provider = _mapper.Map<ProviderRequest, Provider>(request);
-            
-            if (!_providerManager.DoesCountryIdExist(provider))
+            if (!_providerManager.DoesCountryIdExist(request.OriginCountryId))
             {
-                return BadRequest("There is no such provider ID in a Database!");
+                return BadRequest("There is no such country ID in a Database!");
             } 
+            
+            var provider = _mapper.Map<ProviderRequest, Provider>(request);
             
             _providerManager.Add(provider);
             _providerManager.SaveChanges();

@@ -15,12 +15,12 @@ namespace Library.Core.Abstract.Managers
        
           Provider  FindProvider (int id);
        
-          Provider  RemoveProvider (int id);
+          void  RemoveProvider (int id);
           
           void Add(Provider provider);
 
           void Remove(Provider provider);
           
-          bool DoesCountryIdExist(Provider provider);
+          bool DoesCountryIdExist(int countryId);
     }
 }
